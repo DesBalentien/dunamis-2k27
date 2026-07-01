@@ -498,52 +498,55 @@ function setModel(k){
     return `<div class="barrow"><div class="top"><span>${it.label}</span><span class="amt">${fmt(it.val)} · ${pct}%</span></div><div class="track"><div class="fill" style="width:${it.val/max*100}%;background:${it.color}"></div></div></div>`;}).join("");
 }
 
-/* ---------- Verzenden naar Google Sheet ----------
-   Plak hieronder de Web-app-URL van je Apps Script (Deploy → Web app).
-   Zolang dit op de placeholder staat, meldt de knop dat de koppeling nog ontbreekt. */
-const SHEET_ENDPOINT="__APPS_SCRIPT_URL__";
-
+/* ---------- Verzenden naar Google Sheet (via Google Formulier) ----------
+   De pagina post rechtstreeks naar een Google Formulier; de reacties worden
+   verzameld in het Google Sheet "Dunamis 2K27 — Reacties". */
+const FORM_ENDPOINT="https://docs.google.com/forms/d/e/1FAIpQLSef4iRpY0O_2p7foVDEN72Jwc2mIWVh-IWXPep-PV9n6rj7QQ/formResponse";
+const ENTRY={
+  naam:"entry.601425814", oordeel:"entry.1079257160", aanpassingen:"entry.1648108824",
+  toelichting:"entry.567569969", scenario:"entry.1538859999", waarom:"entry.1958859888",
+  pledges:"entry.1117550250", sponsoren:"entry.407777007", fondsen:"entry.1816875944",
+  tickets:"entry.1000724507", overige:"entry.123287330"
+};
 const VERDICT_LABEL={akkoord:"Begroting akkoord",verhogen:"Moet hoger",verlagen:"Moet lager",bespreken:"Nog bespreken"};
-const MODEL_LABEL={A:"Optie A · mét kaarten",B:"Optie B · gratis (zonder kaarten)",open:"Nog open"};
-function collectPayload(){
+const MODEL_LABEL={A:"Optie A · mét kaartverkoop",B:"Optie B · gratis (zonder kaarten)",open:"Nog open"};
+function buildFormData(){
   const g=id=>{const el=document.getElementById(id);return el?el.value.trim():"";};
   const bv=document.querySelector('input[name="bverdict"]:checked');
   const mv=document.querySelector('input[name="mverdict"]:checked');
-  let tot=0;const budget={};
+  let tot=0;const lines=[];
   document.querySelectorAll("#budgetBody input.money").forEach(inp=>{
     const v=parseInt((inp.value||"0").replace(/[^\d]/g,""))||0;tot+=v;
-    budget["Begroting: "+BUDGET[inp.dataset.idx][0]]=v;
+    lines.push(BUDGET[inp.dataset.idx][0]+": "+fmt(v));
   });
-  return Object.assign({
-    "Tijdstip":new Date().toLocaleString("nl-NL"),
-    "Naam":g("submitterName"),
-    "Oordeel begroting":bv?VERDICT_LABEL[bv.value]:"",
-    "Voorkeur scenario":mv?MODEL_LABEL[mv.value]:"",
-    "Aangepast totaal (EUR)":tot,
-    "Verschil t.o.v. 250.000":tot-BASE_TOTAL
-  },budget,{
-    "Notitie begroting":g("note_budget"),
-    "Notitie scenario":g("note_model"),
-    "Notitie pledges":g("note_pledge"),
-    "Notitie sponsoren":g("note_sponsor"),
-    "Notitie fondsen":g("note_fondsen"),
-    "Notitie tickets & giving":g("note_ticket")
-  });
+  const d=tot-BASE_TOTAL;
+  lines.push("— Aangepast totaal: "+fmt(tot));
+  lines.push("— Verschil t.o.v. €250.000: "+(d>=0?"+":"−")+fmt(Math.abs(d)).slice(1));
+  const p=new URLSearchParams();
+  p.append(ENTRY.naam,g("submitterName"));
+  if(bv)p.append(ENTRY.oordeel,VERDICT_LABEL[bv.value]);
+  p.append(ENTRY.aanpassingen,lines.join("\n"));
+  p.append(ENTRY.toelichting,g("note_budget"));
+  if(mv)p.append(ENTRY.scenario,MODEL_LABEL[mv.value]);
+  p.append(ENTRY.waarom,g("note_model"));
+  p.append(ENTRY.pledges,g("note_pledge"));
+  p.append(ENTRY.sponsoren,g("note_sponsor"));
+  p.append(ENTRY.fondsen,g("note_fondsen"));
+  p.append(ENTRY.tickets,g("note_ticket"));
+  return p;
 }
 async function submitToSheet(){
   const btn=document.getElementById("sendBtn"),st=document.getElementById("sendStatus");
   save();
-  if(!SHEET_ENDPOINT||SHEET_ENDPOINT.indexOf("__")===0){
-    st.style.color="var(--fire)";st.textContent="Sheet-koppeling nog niet ingesteld.";return;
-  }
   if(!document.getElementById("submitterName").value.trim()){
     st.style.color="var(--fire)";st.textContent="Vul eerst je naam in.";return;
   }
   btn.disabled=true;st.style.color="var(--muted)";st.textContent="Versturen…";
   try{
-    await fetch(SHEET_ENDPOINT,{method:"POST",mode:"no-cors",
-      headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(collectPayload())});
-    st.style.color="var(--green)";st.textContent="Verzonden ✓ Bedankt!";
+    await fetch(FORM_ENDPOINT,{method:"POST",mode:"no-cors",
+      headers:{"Content-Type":"application/x-www-form-urlencoded"},body:buildFormData().toString()});
+    st.style.color="var(--green)";st.textContent="Verzonden ✓ Bedankt! Je reactie is doorgestuurd.";
+    btn.textContent="Nogmaals versturen";
   }catch(e){
     st.style.color="var(--fire)";st.textContent="Versturen mislukt — controleer je verbinding en probeer opnieuw.";
   }finally{btn.disabled=false;}
