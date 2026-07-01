@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dunamis 2K27 — Financieringsmodel &amp; Review</title>
+<style>
+  :root{
+    /* RTN — Revolutionize The Nations: zwart · goud · dieprood */
+    --ink:#16130e; --muted:#7a7268; --line:#e8e1d4; --bg:#f7f4ee; --card:#ffffff;
+    --gold:#b8912f; --gold-soft:#f1e6c6; --fire:#a81d2b; --red:#a81d2b; --deep:#111014;
+    --green:#3f7d54; --blue:#3b6ea5; --plum:#8a5a7a; --review:#7a5c14; --review-bg:#fbf4e2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.hero{background:
+      radial-gradient(120% 130% at 85% 0%, rgba(168,29,43,.55) 0%, rgba(168,29,43,0) 55%),
+      linear-gradient(135deg,#0c0b0d 0%,#161013 45%,#25090d 100%);
+    color:#fff;padding:56px 0 50px;position:relative;overflow:hidden}
+  header.hero:before{content:"";position:absolute;inset:0;border-bottom:3px solid var(--gold);pointer-events:none}
+  .brandbar{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+  .rtnmark{width:52px;height:52px;border:2px solid var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:18px;letter-spacing:.02em;color:var(--gold);background:rgba(184,145,47,.08);flex:none}
+  .brandbar .bt{font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;line-height:1.35}
+  .brandbar .bt span{display:block;color:#cbb98a;font-weight:600;letter-spacing:.18em}
+  .eyebrow{letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:var(--gold);font-weight:700}
+  h1{font-size:54px;line-height:1.0;font-weight:800;margin:12px 0 6px;letter-spacing:-.02em}
+  .hero .sub{font-size:19px;color:#d8d2c6;max-width:660px}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:28px;margin-top:30px}
+  .hero .meta div{border-left:2px solid var(--gold);padding-left:14px}
+  .hero .meta .k{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#b9b2a4}
+  .hero .meta .v{font-size:20px;font-weight:600;margin-top:2px}
+  section{padding:50px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);font-weight:800;margin-bottom:8px}
+  h2:after{content:"";display:block;width:38px;height:3px;background:var(--gold);margin-top:8px;border-radius:2px}
+  h3.big{font-size:30px;font-weight:700;letter-spacing:-.015em;margin-bottom:16px}
+  p.lead{font-size:17px;color:#33373f;max-width:770px;margin-bottom:8px}
+  .grid{display:grid;gap:18px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g2{grid-template-columns:1fr 1fr}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+  .card .n{font-size:28px;font-weight:700;letter-spacing:-.02em}
+  .card .d{font-size:13px;color:#4b5563;margin-top:8px}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr.total td{font-weight:700;border-top:2px solid var(--ink);border-bottom:none;font-size:15.5px}
+  .toggle{display:inline-flex;flex-wrap:wrap;max-width:100%;background:#efe9dd;border-radius:999px;padding:5px;gap:4px;margin:6px 0 22px}
+  .toggle button{border:none;background:transparent;padding:11px 22px;border-radius:999px;font-size:14.5px;font-weight:600;color:#6b6355;cursor:pointer;transition:.15s}
+  .toggle button.active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .modelnote{font-size:14px;color:#5b6472;background:var(--gold-soft);border-radius:10px;padding:12px 16px;margin-bottom:22px}
+  .barrow{margin:14px 0}
+  .barrow .top{display:flex;justify-content:space-between;font-size:14.5px;margin-bottom:6px}
+  .barrow .top .amt{font-weight:700;font-variant-numeric:tabular-nums}
+  .track{height:14px;background:#eee7db;border-radius:8px;overflow:hidden}
+  .fill{height:100%;border-radius:8px;transition:width .5s ease}
+  .split{display:grid;grid-template-columns:280px 1fr;gap:34px;align-items:start}
+  .donutwrap{display:flex;flex-direction:column;align-items:center}
+  .donutinner{position:relative;width:230px;height:230px}
+  .donutlabel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+  .legend{font-size:13.5px;margin-top:18px;width:100%}
+  .legend div{display:flex;align-items:center;gap:8px;margin:5px 0;justify-content:space-between}
+  .legend .lft{display:flex;align-items:center;gap:8px}
+  .dot{width:11px;height:11px;border-radius:3px;flex:none}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--gold-soft);color:#7a5c14}
+  .tiernote{font-size:13px;color:var(--muted);margin-top:8px}
+  ul.clean{list-style:none;font-size:14.5px}
+  ul.clean li{padding:9px 0 9px 26px;position:relative;border-bottom:1px solid var(--line)}
+  ul.clean li:before{content:"";position:absolute;left:0;top:15px;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+  .warn{border-left:3px solid var(--fire);background:#fdf0ea;padding:14px 18px;border-radius:0 10px 10px 0;font-size:14px;color:#6b3a26}
+  .pnote{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:14px;padding:26px 30px;font-size:16.5px;color:#33373f;max-width:820px;box-shadow:0 6px 24px rgba(20,16,10,.06)}
+  .pnote-tab{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:12px}
+  .pnote-sign{margin-top:16px;font-weight:700;color:var(--ink);font-size:16px}
+  .howto{margin-top:26px;background:#111014;color:#f3ead2;border-radius:16px;padding:26px 28px;border:1px solid #2a2620}
+  .howto-tab{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);border-radius:999px;padding:5px 14px;margin-bottom:14px}
+  .howto-intro{font-size:15.5px;color:#e7ddc8;max-width:760px;margin-bottom:8px}
+  .howto-steps .step{border-bottom:1px solid #2a2620}
+  .howto-steps .step h4{color:#fff}
+  .howto-steps .step p{color:#c7bda8}
+  .howto-steps .step .num{background:var(--gold);color:#1a1206}
+  .howto-foot{margin-top:14px;font-size:14.5px;color:#e7ddc8}
+  .howto-foot strong{color:var(--gold)}
+  /* review styling */
+  .review{background:var(--review-bg);border:1px solid #ecdcae;border-radius:16px;padding:22px 24px;margin-top:22px}
+  .review h4{font-size:15px;color:var(--review);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .review .hint{font-size:13px;color:#8a7a52;margin-bottom:12px}
+  textarea.note{width:100%;min-height:74px;border:1px solid #e2cf9a;border-radius:10px;padding:11px 13px;font-family:inherit;font-size:14.5px;background:#fffdf7;resize:vertical;color:var(--ink)}
+  textarea.note:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+  input.money{width:118px;text-align:right;border:1px solid #e2cf9a;border-radius:8px;padding:7px 9px;font-family:inherit;font-size:14.5px;background:#fffdf7;font-variant-numeric:tabular-nums}
+  input.money:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+  .verdict{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 4px}
+  .verdict label{display:flex;align-items:center;gap:8px;border:1px solid #e2cf9a;background:#fffdf7;border-radius:999px;padding:9px 16px;font-size:14px;cursor:pointer;font-weight:600}
+  .verdict input{accent-color:var(--gold);width:16px;height:16px}
+  .saved{font-size:12px;color:var(--green);font-weight:600;opacity:0;transition:.3s}
+  .saved.show{opacity:1}
+  .deltabox{display:flex;gap:26px;flex-wrap:wrap;margin-top:14px;font-size:14px}
+  .deltabox b{font-size:22px;display:block;font-variant-numeric:tabular-nums}
+  .toolbar{position:sticky;top:0;z-index:20;background:var(--deep);border-bottom:2px solid var(--gold);padding:10px 0}
+  .toolbar .wrap{display:flex;gap:12px;align-items:center;justify-content:space-between;color:#f3ead2}
+  .btn{border:1px solid var(--gold);background:var(--gold);color:#1a1206;border-radius:999px;padding:9px 18px;font-size:13.5px;font-weight:700;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--gold)}
+  /* workflow */
+  .wf th{background:#f4efe4}
+  .wf td:first-child{font-weight:700;width:34px;text-align:center;color:var(--gold)}
+  .rolechip{display:inline-block;font-size:12px;font-weight:600;background:#eef1f6;color:#3b4a63;border-radius:6px;padding:2px 8px}
+  .steps{counter-reset:s}
+  footer{padding:38px 0 60px;color:var(--muted);font-size:13px}
+  footer a{color:var(--blue);text-decoration:none}
+  @media(max-width:820px){.g3,.g4,.g2,.split{grid-template-columns:1fr}h1{font-size:38px}
+    .hero .meta{gap:18px}.toolbar .wrap{flex-wrap:wrap;gap:8px}
+    .toolbar .wrap span:first-child{flex:1 1 100%}}
+  @media(max-width:520px){h1{font-size:32px}.wrap{padding:0 16px}
+    table{font-size:13px}th,td{padding:8px 8px}input.money{width:92px}
+    .verdict label{padding:8px 12px;font-size:13px}}
+  @media print{.toolbar,.toggle{display:none}textarea.note{border:1px solid #ccc}}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span style="font-weight:700;font-size:14px">Dunamis 2K27 · Financieringsmodel &amp; Review</span>
+    <span>
+      <span class="saved" id="savedTag">Opgeslagen ✓</span>
+      <button class="btn ghost" onclick="window.print()">Print / PDF</button>
+      <button class="btn ghost" onclick="resetAll()">Wis aantekeningen</button>
+    </span>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brandbar">
+      <div class="rtnmark">RTN</div>
+      <div class="bt">Revolutionize The Nations<span>Apostolic Center · Apostle Shamil Gesser</span></div>
+    </div>
+    <div class="eyebrow">Dunamis Revival · 24–25–26 juni 2027</div>
+    <h1>Dunamis 2K27</h1>
+    <p class="sub">Persoonlijk voor jou uitgewerkt — met ruimte voor jouw gedachten over de begroting en een concreet stappenplan per financieringsbron voor het team.</p>
+    <div class="meta">
+      <div><div class="k">Data</div><div class="v">24–25–26 juni 2027</div></div>
+      <div><div class="k">Begroting (raming)</div><div class="v">± €250.000</div></div>
+      <div><div class="k">Bezoekers</div><div class="v">1.000 – 1.500</div></div>
+      <div><div class="k">RTN ledenbasis</div><div class="v">± 500</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- PERSOONLIJKE NOTITIE -->
+<section style="background:linear-gradient(180deg,#fbf7ee 0%,#f7f4ee 100%)">
+  <div class="wrap">
+    <div class="pnote">
+      <div class="pnote-tab">Persoonlijke notitie</div>
+      <p>Ik heb dit financieringsmodel voor <strong>Dunamis 2K27</strong> (24–25–26 juni 2027) voor jou uitgewerkt. Zie het als een vertrekpunt — niet als een vaststaand plan.</p>
+      <p style="margin-top:12px">Loop het rustig door en laat vooral je gedachten erop gaan: klopt de begroting, moet er iets bij of af, en welk scenario voelt goed — <strong>mét of zonder kaartverkoop</strong>? Op de goudkleurige vlakken kun je direct je oordeel en aantekeningen kwijt; die worden bewaard. Per financieringsbron staat een stappenplan zodat het team precies weet wat het moet regelen.</p>
+      <p style="margin-top:12px">Ik hoor graag wat jij ervan vindt en waar we samen op moeten bijsturen.</p>
+      <div class="pnote-sign">— Des</div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO / FOCUS 2K27 -->
+<section>
+  <div class="wrap">
+    <h2>Dunamis 2K27</h2>
+    <h3 class="big">Waar dit document over gaat</h3>
+    <p class="lead">Dit is het financieringsplan voor <strong>Dunamis 2K27</strong> op 24, 25 en 26 juni 2027 — de jaarlijkse revivalconferentie van het RTN-netwerk onder leiding van Apostle Shamil Gesser. Het doel: de volledige begroting gedekt krijgen via vier bronnen — <strong>member pledges, sponsoren, fondsen &amp; subsidies</strong> en <strong>ticketverkoop &amp; giving</strong> — en het team precies weten wat het per bron moet regelen.</p>
+    <p class="lead" style="margin-top:12px">Er zijn twee scenario's: <strong>mét</strong> en <strong>zonder</strong> kaartverkoop. Jij kunt hieronder per onderdeel meelezen, de begroting bijstellen en aangeven welk scenario je voorkeur heeft. Je aantekeningen worden lokaal in deze browser bewaard.</p>
+
+    <div class="howto">
+      <div class="howto-tab">Zo werkt het — jij hoeft alleen in te vullen</div>
+      <p class="howto-intro">Je hoeft niets zelf uit te rekenen of op te maken. Loop de vier stappen langs en vul overal in wat jij wilt. Alles wat je invult wordt automatisch bewaard.</p>
+      <div class="steps howto-steps">
+        <div class="step"><div class="num"></div><div><h4>Bekijk &amp; pas de begroting aan</h4><p>Verander in de kolom <em>"Aangepast"</em> elk bedrag naar wens. Het totaal rekent vanzelf mee.</p></div></div>
+        <div class="step"><div class="num"></div><div><h4>Geef je oordeel over de begroting</h4><p>Vink aan: akkoord, hoger, lager of nog bespreken — en schrijf je gedachten in het gele veld.</p></div></div>
+        <div class="step"><div class="num"></div><div><h4>Kies het scenario</h4><p>Mét of zonder kaartverkoop. Vink je voorkeur aan en licht kort toe waarom.</p></div></div>
+        <div class="step"><div class="num"></div><div><h4>Vul je aantekeningen per bron in</h4><p>Bij elke financieringsbron (pledges, sponsoren, fondsen, tickets) staat een geel veld voor jouw opmerkingen.</p></div></div>
+      </div>
+      <p class="howto-foot">Klaar? Klik rechtsboven op <strong>Print / PDF</strong> om het terug te sturen. Alles wat je invult blijft staan.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BEGROTING + REVIEW -->
+<section>
+  <div class="wrap">
+    <h2>Kostenkant</h2>
+    <h3 class="big">Begroting — te beoordelen &amp; aan te passen</h3>
+    <p class="lead">Onderstaande bedragen zijn een raming. Pas de cijfers in de kolom <em>"Aangepast"</em> gerust aan; het totaal en het verschil met de oorspronkelijke €250.000 rekenen automatisch mee.</p>
+    <table style="margin-top:20px">
+      <thead><tr><th>Kostenpost</th><th>Toelichting</th><th class="num">Raming</th><th class="num">Aangepast</th></tr></thead>
+      <tbody id="budgetBody"></tbody>
+      <tfoot>
+        <tr class="total"><td>Totaal</td><td></td><td class="num">€250.000</td><td class="num" id="budgetTotal">€250.000</td></tr>
+      </tfoot>
+    </table>
+    <div class="deltabox">
+      <div>Aangepast totaal <b id="dTotal">€250.000</b></div>
+      <div>Verschil t.o.v. raming <b id="dDelta">€0</b></div>
+    </div>
+
+    <div class="review">
+      <h4>✍️ Jouw oordeel over de begroting</h4>
+      <div class="hint">Moet de begroting omhoog, omlaag of blijft hij zo? Vink aan en noteer je gedachten.</div>
+      <div class="verdict" id="budgetVerdict">
+        <label><input type="radio" name="bverdict" value="akkoord"> Begroting akkoord</label>
+        <label><input type="radio" name="bverdict" value="verhogen"> Moet hoger</label>
+        <label><input type="radio" name="bverdict" value="verlagen"> Moet lager</label>
+        <label><input type="radio" name="bverdict" value="bespreken"> Nog bespreken</label>
+      </div>
+      <textarea class="note" id="note_budget" placeholder="Bijv.: 'Productie mag ruimer, reken op meer LED. Sprekers: 4 internationale gasten i.p.v. 3.'"></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- FINANCIERINGSMIX TOGGLE -->
+<section>
+  <div class="wrap">
+    <h2>Dekkingskant</h2>
+    <h3 class="big">Financieringsmix — kies het scenario</h3>
+    <div class="toggle" role="tablist">
+      <button id="btnA" class="active" onclick="setModel('A')">Optie A · Mét kaartverkoop</button>
+      <button id="btnB" onclick="setModel('B')">Optie B · Zonder kaartverkoop</button>
+    </div>
+    <div class="modelnote" id="modelnote"></div>
+
+    <div class="split">
+      <div class="donutwrap">
+        <div class="donutinner">
+          <svg id="donut" viewBox="0 0 200 200" width="230" height="230" aria-label="Verdeling financiering"></svg>
+          <div class="donutlabel">
+            <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Totaal</div>
+            <div id="donutTotal" style="font-size:24px;font-weight:700"></div>
+          </div>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div id="bars"></div>
+    </div>
+
+    <div class="review">
+      <h4>✍️ Jouw voorkeur — welk scenario?</h4>
+      <div class="hint">Gaan we voor toegankelijkheid (gratis) of voor financiële zekerheid (kaarten)? Vink je keuze aan.</div>
+      <div class="verdict" id="modelVerdict">
+        <label><input type="radio" name="mverdict" value="A"> Optie A · mét kaarten</label>
+        <label><input type="radio" name="mverdict" value="B"> Optie B · gratis</label>
+        <label><input type="radio" name="mverdict" value="open"> Nog open</label>
+      </div>
+      <textarea class="note" id="note_model" placeholder="Jouw voorkeur en waarom..."></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WORKFLOWS PER BRON ================= -->
+
+<!-- BRON 1: PLEDGES -->
+<section>
+  <div class="wrap">
+    <h2>Bron 1 · Stappenplan</h2>
+    <h3 class="big">Member pledges — RTN gemeente</h3>
+    <p class="lead">De ruggengraat. ± 500 leden (Amsterdam, Almere, Rotterdam) committeren zich aan een tier — eenmalig of maandelijks over 12 maanden. Doel: <strong>€65.000 (optie A)</strong> / <strong>€85.000 (optie B)</strong>.</p>
+    <table style="margin-top:16px">
+      <thead><tr><th>Tier</th><th class="num">Bedrag</th><th>Per maand</th><th class="num">Doel # leden</th></tr></thead>
+      <tbody>
+        <tr><td>Seed</td><td class="num">€60</td><td>€5 / mnd</td><td class="num">150</td></tr>
+        <tr><td>Builder</td><td class="num">€180</td><td>€15 / mnd</td><td class="num">100</td></tr>
+        <tr><td>Partner</td><td class="num">€540</td><td>€45 / mnd</td><td class="num">50</td></tr>
+        <tr><td>Pillar</td><td class="num">€1.200</td><td>€100 / mnd</td><td class="num">15</td></tr>
+        <tr><td>Kingdom Investor</td><td class="num">€2.500+</td><td>maatwerk</td><td class="num">5</td></tr>
+      </tbody>
+    </table>
+    <h4 style="margin:22px 0 8px;font-size:16px">Workflow voor het team</h4>
+    <table class="wf">
+      <thead><tr><th>#</th><th>Wat te regelen</th><th>Wie</th><th>Wanneer</th><th>Resultaat</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Campagnevisie &amp; doelbedrag vaststellen</td><td><span class="rolechip">Apostle + Pledge-coördinator</span></td><td>Sep '26</td><td>Helder pledge-doel per vestiging</td></tr>
+        <tr><td>2</td><td>Betaalsysteem opzetten (automatische incasso / Mollie) + ANBI-onderbouwing</td><td><span class="rolechip">Penningmeester</span></td><td>Okt '26</td><td>Werkend incasso- &amp; giftensysteem</td></tr>
+        <tr><td>3</td><td>Campagnemateriaal: video, pledgekaarten, QR-formulier</td><td><span class="rolechip">Media / Marketing</span></td><td>Okt '26</td><td>Complete campagne-toolkit</td></tr>
+        <tr><td>4</td><td>Pledge-weekend in alle 3 vestigingen</td><td><span class="rolechip">Voorgangers vestigingen</span></td><td>Nov '26</td><td>Getekende pledges ingevoerd</td></tr>
+        <tr><td>5</td><td>Registratie &amp; opvolging (herinneringen, no-shows)</td><td><span class="rolechip">Pledge-coördinator</span></td><td>Doorlopend</td><td>Actueel pledge-overzicht</td></tr>
+        <tr><td>6</td><td>Maandelijkse monitoring binnengekomen vs. doel</td><td><span class="rolechip">Penningmeester</span></td><td>Dec '26 – jun '27</td><td>Bijsturing waar nodig</td></tr>
+      </tbody>
+    </table>
+    <div class="review"><h4>✍️ Aantekening — pledges</h4><textarea class="note" id="note_pledge" placeholder="Wie wordt pledge-coördinator? Kickoff-datum? Doelbedrag akkoord?"></textarea></div>
+  </div>
+</section>
+
+<!-- BRON 2: SPONSOREN -->
+<section>
+  <div class="wrap">
+    <h2>Bron 2 · Stappenplan</h2>
+    <h3 class="big">Sponsoren — ondernemers &amp; partners</h3>
+    <p class="lead">Christelijke ondernemers, bedrijven en partnerkerken. Zichtbaarheid tegen bijdrage. Doel: <strong>€55.000 (A)</strong> / <strong>€65.000 (B)</strong>.</p>
+    <div class="grid g4" style="margin-top:14px">
+      <div class="card"><span class="pill">Brons</span><div class="n" style="margin-top:10px">€1.000</div><div class="d">Logo online + 2 plekken</div></div>
+      <div class="card"><span class="pill">Zilver</span><div class="n" style="margin-top:10px">€2.500</div><div class="d">Livestream-vermelding + 4 plekken</div></div>
+      <div class="card"><span class="pill">Goud</span><div class="n" style="margin-top:10px">€5.000</div><div class="d">Podiumvermelding + stand + 8 plekken</div></div>
+      <div class="card"><span class="pill">Platina / Titel</span><div class="n" style="margin-top:10px">€10.000+</div><div class="d">Titelsponsor, branding overal</div></div>
+    </div>
+    <h4 style="margin:22px 0 8px;font-size:16px">Workflow voor het team</h4>
+    <table class="wf">
+      <thead><tr><th>#</th><th>Wat te regelen</th><th>Wie</th><th>Wanneer</th><th>Resultaat</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Prospectlijst ondernemers &amp; partners opstellen</td><td><span class="rolechip">Sponsor-lead</span></td><td>Sep '26</td><td>Lijst met 40–60 leads</td></tr>
+        <tr><td>2</td><td>Sponsor-onepager met tiers &amp; tegenprestaties</td><td><span class="rolechip">Media / Marketing</span></td><td>Okt '26</td><td>Verkoopbaar pakket</td></tr>
+        <tr><td>3</td><td>Benaderen + pitchgesprekken voeren</td><td><span class="rolechip">Sponsor-lead + Apostle</span></td><td>Okt–Nov '26</td><td>Toezeggingen binnen</td></tr>
+        <tr><td>4</td><td>Contracten &amp; facturatie afronden</td><td><span class="rolechip">Penningmeester</span></td><td>Nov–Dec '26</td><td>Getekende deals</td></tr>
+        <tr><td>5</td><td>Logo's/branding verwerken in alle uitingen</td><td><span class="rolechip">Media / Marketing</span></td><td>Mrt–Jun '27</td><td>Sponsors zichtbaar</td></tr>
+        <tr><td>6</td><td>Sponsoractivatie op het event (stands, VIP)</td><td><span class="rolechip">Event-coördinator</span></td><td>Jun '27</td><td>Tevreden sponsors → verlenging</td></tr>
+      </tbody>
+    </table>
+    <div class="review"><h4>✍️ Aantekening — sponsoren</h4><textarea class="note" id="note_sponsor" placeholder="Welke ondernemers benaderen we eerst? Wie wordt sponsor-lead?"></textarea></div>
+  </div>
+</section>
+
+<!-- BRON 3: FONDSEN -->
+<section>
+  <div class="wrap">
+    <h2>Bron 3 · Stappenplan</h2>
+    <h3 class="big">Fondsen &amp; subsidies</h3>
+    <p class="lead">Directe overheidssubsidie voor een religieus event is in NL beperkt. Realistische route: private/kerkelijke fondsen, vermogensfondsen met christelijke grondslag en internationale partners. Doel (conservatief): <strong>€40.000 (A)</strong> / <strong>€50.000 (B)</strong>.</p>
+    <ul class="clean" style="margin-top:12px;max-width:820px">
+      <li><strong>Kerkelijke &amp; diaconale fondsen</strong> — steun/matching via partnerkerken en denominatienetwerken.</li>
+      <li><strong>Vermogensfondsen met christelijke grondslag</strong> — geloofsopbouw/jongerenwerk; aanvraag met projectbegroting.</li>
+      <li><strong>Internationale partnerkerken &amp; ministries</strong> — co-financiering vanuit het RTN-netwerk.</li>
+      <li><strong>Maatschappelijk programmaonderdeel</strong> — een niet-religieus deel (jongeren/community) kan wél subsidiabel zijn.</li>
+    </ul>
+    <h4 style="margin:22px 0 8px;font-size:16px">Workflow voor het team</h4>
+    <table class="wf">
+      <thead><tr><th>#</th><th>Wat te regelen</th><th>Wie</th><th>Wanneer</th><th>Resultaat</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Fondsen inventariseren + geschiktheid checken</td><td><span class="rolechip">Fondsenwerver</span></td><td>Sep '26</td><td>Shortlist 8–12 fondsen</td></tr>
+        <tr><td>2</td><td>Projectplan + begroting + ANBI-documenten klaarmaken</td><td><span class="rolechip">Fondsenwerver + Penningmeester</span></td><td>Okt '26</td><td>Aanvraagdossier</td></tr>
+        <tr><td>3</td><td>Maatschappelijk onderdeel definiëren voor subsidiabiliteit</td><td><span class="rolechip">Event-coördinator</span></td><td>Okt '26</td><td>Subsidiabel programmadeel</td></tr>
+        <tr><td>4</td><td>Aanvragen indienen (ruim vóóraf i.v.m. doorlooptijd)</td><td><span class="rolechip">Fondsenwerver</span></td><td>Okt–Nov '26</td><td>Ingediende aanvragen</td></tr>
+        <tr><td>5</td><td>Opvolging + eventuele aanvullende vragen</td><td><span class="rolechip">Fondsenwerver</span></td><td>Dec '26 – mrt '27</td><td>Toekenningen</td></tr>
+        <tr><td>6</td><td>Verantwoording &amp; rapportage na afloop</td><td><span class="rolechip">Penningmeester</span></td><td>Jul '27</td><td>Relatie behouden</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="margin-top:16px">Reken fondsen/subsidies conservatief in en behandel ze als <strong>aanvulling</strong>, niet als fundament — toekenning is onzeker en kent lange doorlooptijden.</div>
+    <div class="review"><h4>✍️ Aantekening — fondsen</h4><textarea class="note" id="note_fondsen" placeholder="Kennen we specifieke fondsen/partners? Wie trekt dit?"></textarea></div>
+  </div>
+</section>
+
+<!-- BRON 4: TICKETS & GIVING -->
+<section>
+  <div class="wrap">
+    <h2>Bron 4 · Stappenplan</h2>
+    <h3 class="big">Ticketverkoop &amp; giving</h3>
+    <div class="g2 grid">
+      <div class="card">
+        <h4 style="font-size:17px;margin-bottom:8px">Optie A — mét kaartverkoop</h4>
+        <table><tbody>
+          <tr><td>Tickets (3-daags, tiers)</td><td class="num">€55.000</td></tr>
+          <tr><td>Offerings tijdens event</td><td class="num">€32.000</td></tr>
+          <tr><td>Merchandise &amp; boekentafel</td><td class="num">€8.000</td></tr>
+          <tr class="total"><td>Subtotaal</td><td class="num">€95.000</td></tr>
+        </tbody></table>
+        <p class="tiernote">Tiers: Early bird €30 · Regulier €45 · VIP €90 · Dagkaart €20.</p>
+      </div>
+      <div class="card">
+        <h4 style="font-size:17px;margin-bottom:8px">Optie B — zonder kaartverkoop</h4>
+        <table><tbody>
+          <tr><td>Toegang</td><td class="num">Gratis</td></tr>
+          <tr><td>Offerings tijdens event</td><td class="num">€45.000</td></tr>
+          <tr><td>Merchandise &amp; boekentafel</td><td class="num">€8.000</td></tr>
+          <tr class="total"><td>Subtotaal</td><td class="num">€53.000</td></tr>
+        </tbody></table>
+        <p class="tiernote">Gratis toegang = missie-fit + hogere opkomst; sterkere giving-momenten nodig.</p>
+      </div>
+    </div>
+    <h4 style="margin:22px 0 8px;font-size:16px">Workflow voor het team</h4>
+    <table class="wf">
+      <thead><tr><th>#</th><th>Wat te regelen</th><th>Wie</th><th>Wanneer</th><th>Resultaat</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Ticketplatform kiezen &amp; tiers instellen (optie A) — of gratis registratie (optie B)</td><td><span class="rolechip">Event-coördinator</span></td><td>Dec '26</td><td>Registratie live</td></tr>
+        <tr><td>2</td><td>Launch campagne (early bird / registratie-oproep)</td><td><span class="rolechip">Media / Marketing</span></td><td>Jan '27</td><td>Eerste verkopen/aanmeldingen</td></tr>
+        <tr><td>3</td><td>Giving-flow event opzetten (QR, collecte, pin)</td><td><span class="rolechip">Penningmeester</span></td><td>Mei '27</td><td>Soepel geven mogelijk</td></tr>
+        <tr><td>4</td><td>Merchandise inkopen &amp; boekentafel bemannen</td><td><span class="rolechip">Merchandise-lead</span></td><td>Mei–Jun '27</td><td>Verkoop op event</td></tr>
+        <tr><td>5</td><td>Afrekening &amp; telling per avond</td><td><span class="rolechip">Penningmeester</span></td><td>24–26 jun '27</td><td>Dagelijkse cijfers</td></tr>
+      </tbody>
+    </table>
+    <div class="review"><h4>✍️ Aantekening — tickets &amp; giving</h4><textarea class="note" id="note_ticket" placeholder="Prijzen akkoord? Gratis of betaald? Wie regelt merchandise?"></textarea></div>
+  </div>
+</section>
+
+<!-- OVERZICHT VERGELIJKING -->
+<section>
+  <div class="wrap">
+    <h2>Overzicht</h2>
+    <h3 class="big">Optie A vs. Optie B</h3>
+    <table style="margin-top:16px">
+      <thead><tr><th>Financieringsbron</th><th class="num">Optie A (mét kaarten)</th><th class="num">Optie B (zonder kaarten)</th></tr></thead>
+      <tbody>
+        <tr><td>Member pledges (RTN)</td><td class="num">€65.000</td><td class="num">€85.000</td></tr>
+        <tr><td>Sponsoren</td><td class="num">€55.000</td><td class="num">€65.000</td></tr>
+        <tr><td>Fondsen &amp; subsidies</td><td class="num">€40.000</td><td class="num">€50.000</td></tr>
+        <tr><td>Ticketverkoop &amp; giving</td><td class="num">€95.000</td><td class="num">€53.000</td></tr>
+        <tr class="total"><td>Totale dekking</td><td class="num">€255.000</td><td class="num">€253.000</td></tr>
+        <tr><td>Begroting</td><td class="num">€250.000</td><td class="num">€250.000</td></tr>
+        <tr class="total"><td>Buffer / marge</td><td class="num">€5.000</td><td class="num">€3.000</td></tr>
+      </tbody>
+    </table>
+    <p class="tiernote">Let op: als de begroting hierboven wordt aangepast, moet de dekking meebewegen — verhoog dan het doel per bron naar rato.</p>
+  </div>
+</section>
+
+<!-- VERZENDEN NAAR SHEET -->
+<section id="verzend" style="background:linear-gradient(180deg,#f7f4ee 0%,#fbf7ee 100%)">
+  <div class="wrap">
+    <h2>Afronden</h2>
+    <h3 class="big">Versturen naar Des</h3>
+    <p class="lead">Klaar met meelezen? Vul je naam in en klik op versturen. Al je oordelen, de aangepaste begroting en je aantekeningen komen dan in één keer centraal binnen. Ze blijven ook gewoon in deze browser bewaard, dus je kunt later nog aanpassen en opnieuw versturen.</p>
+    <div class="review" style="max-width:580px">
+      <h4>📨 Inzenden</h4>
+      <div class="hint">Je naam helpt om jouw reactie te herkennen in het overzicht.</div>
+      <input class="money" id="submitterName" type="text" placeholder="Jouw naam" style="width:100%;text-align:left;max-width:340px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <button class="btn" id="sendBtn" onclick="submitToSheet()">Versturen naar Des</button>
+        <span id="sendStatus" style="font-size:14px;font-weight:600"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong>Aannames:</strong> begroting ± €250.000 · 1.000–1.500 bezoekers · ± 500 RTN-leden · data 24–26 juni 2027. Alle bedragen zijn richtcijfers voor planning — geen toezegging.</p>
+    <p style="margin-top:10px"><strong>Bronnen achtergrond:</strong>
+      <a href="https://www.rtn-network.com/meet-shamil-gesser/">RTN — Meet Shamil Gesser</a> ·
+      <a href="https://www.shamilgesser.com/">shamilgesser.com</a></p>
+    <p style="margin-top:10px;color:#a9a294">Opgesteld voor Des · Project Dunamis 2K27 · aantekeningen worden lokaal in deze browser bewaard.</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- Begroting data ---------- */
+const BUDGET = [
+  ["Locatie & zaalhuur","3 dagen + op- en afbouw",50000],
+  ["Productie","Geluid, licht, LED, podium",58000],
+  ["Internationale sprekers","Reis, verblijf, love gift",33000],
+  ["Worship & muziek","Band, koor, techniek",18000],
+  ["Marketing & promotie","Ads, print, content, socials",26000],
+  ["Livestream & media","Multicamera, opnames, montage",17000],
+  ["Beveiliging, EHBO & verkeer","Security, medisch, parkeer",13000],
+  ["Hospitality & vrijwilligers","Catering, team, gasten",16000],
+  ["Registratie & administratie","Aanmelding, back-office",7000],
+  ["Onvoorzien (± 5%)","Buffer",12000]
+];
+const BASE_TOTAL = BUDGET.reduce((a,b)=>a+b[2],0); // 250000
+const fmt = n => "€" + Math.round(n).toLocaleString("nl-NL");
+
+function buildBudget(){
+  const tb=document.getElementById("budgetBody");
+  tb.innerHTML = BUDGET.map((r,i)=>`
+    <tr><td>${r[0]}</td><td style="color:#5b6472">${r[1]}</td>
+      <td class="num">${fmt(r[2])}</td>
+      <td class="num"><input class="money" type="text" inputmode="numeric" data-idx="${i}" value="${r[2].toLocaleString("nl-NL")}"></td></tr>`).join("");
+  tb.querySelectorAll("input.money").forEach(inp=>inp.addEventListener("input",()=>{recalc();save();}));
+}
+function recalc(){
+  let tot=0;
+  document.querySelectorAll("#budgetBody input.money").forEach(inp=>{
+    const v=parseInt((inp.value||"0").replace(/[^\d]/g,""))||0; tot+=v;
+  });
+  document.getElementById("budgetTotal").textContent=fmt(tot);
+  document.getElementById("dTotal").textContent=fmt(tot);
+  const d=tot-BASE_TOTAL;
+  document.getElementById("dDelta").textContent=(d>=0?"+":"−")+fmt(Math.abs(d)).slice(1)+" "+ (d===0?"":"");
+  document.getElementById("dDelta").style.color = d>0?"var(--fire)":(d<0?"var(--green)":"var(--ink)");
+}
+
+/* ---------- Financieringsmix ---------- */
+const MODELS = {
+  A:{total:255000,note:"Optie A — mét kaartverkoop. Ticketopbrengst maakt het model minder afhankelijk van werving vooraf. Totale dekking €255.000 vs. €250.000 begroting.",
+    items:[{label:"Ticketverkoop & giving",val:95000,color:"#b8912f"},{label:"Member pledges (RTN)",val:65000,color:"#a81d2b"},{label:"Sponsoren",val:55000,color:"#26232a"},{label:"Fondsen & subsidies",val:40000,color:"#8a6a2e"}]},
+  B:{total:253000,note:"Optie B — zonder kaartverkoop. Gratis toegang past bij de missie en verhoogt opkomst; pledges en sponsors dragen een groter deel. Totale dekking €253.000 vs. €250.000 begroting.",
+    items:[{label:"Member pledges (RTN)",val:85000,color:"#a81d2b"},{label:"Sponsoren",val:65000,color:"#26232a"},{label:"Offerings, giving & merch",val:53000,color:"#b8912f"},{label:"Fondsen & subsidies",val:50000,color:"#8a6a2e"}]}
+};
+function setModel(k){
+  const m=MODELS[k];
+  document.getElementById("btnA").classList.toggle("active",k==="A");
+  document.getElementById("btnB").classList.toggle("active",k==="B");
+  document.getElementById("modelnote").textContent=m.note;
+  document.getElementById("donutTotal").textContent=fmt(m.total);
+  const R=70,C=100,circ=2*Math.PI*R;let acc=0,segs="";
+  m.items.forEach(it=>{const frac=it.val/m.total,dash=frac*circ;
+    segs+=`<circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="${it.color}" stroke-width="26" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-acc*circ}" transform="rotate(-90 ${C} ${C})"></circle>`;acc+=frac;});
+  document.getElementById("donut").innerHTML=segs+`<circle cx="${C}" cy="${C}" r="54" fill="#f7f4ee"></circle>`;
+  document.getElementById("legend").innerHTML=m.items.map(it=>{const pct=Math.round(it.val/m.total*100);
+    return `<div><span class="lft"><span class="dot" style="background:${it.color}"></span>${it.label}</span><span style="font-weight:600">${fmt(it.val)} · ${pct}%</span></div>`;}).join("");
+  const max=Math.max(...m.items.map(i=>i.val));
+  document.getElementById("bars").innerHTML=m.items.map(it=>{const pct=Math.round(it.val/m.total*100);
+    return `<div class="barrow"><div class="top"><span>${it.label}</span><span class="amt">${fmt(it.val)} · ${pct}%</span></div><div class="track"><div class="fill" style="width:${it.val/max*100}%;background:${it.color}"></div></div></div>`;}).join("");
+}
+
+/* ---------- Verzenden naar Google Sheet ----------
+   Plak hieronder de Web-app-URL van je Apps Script (Deploy → Web app).
+   Zolang dit op de placeholder staat, meldt de knop dat de koppeling nog ontbreekt. */
+const SHEET_ENDPOINT="__APPS_SCRIPT_URL__";
+
+const VERDICT_LABEL={akkoord:"Begroting akkoord",verhogen:"Moet hoger",verlagen:"Moet lager",bespreken:"Nog bespreken"};
+const MODEL_LABEL={A:"Optie A · mét kaarten",B:"Optie B · gratis (zonder kaarten)",open:"Nog open"};
+function collectPayload(){
+  const g=id=>{const el=document.getElementById(id);return el?el.value.trim():"";};
+  const bv=document.querySelector('input[name="bverdict"]:checked');
+  const mv=document.querySelector('input[name="mverdict"]:checked');
+  let tot=0;const budget={};
+  document.querySelectorAll("#budgetBody input.money").forEach(inp=>{
+    const v=parseInt((inp.value||"0").replace(/[^\d]/g,""))||0;tot+=v;
+    budget["Begroting: "+BUDGET[inp.dataset.idx][0]]=v;
+  });
+  return Object.assign({
+    "Tijdstip":new Date().toLocaleString("nl-NL"),
+    "Naam":g("submitterName"),
+    "Oordeel begroting":bv?VERDICT_LABEL[bv.value]:"",
+    "Voorkeur scenario":mv?MODEL_LABEL[mv.value]:"",
+    "Aangepast totaal (EUR)":tot,
+    "Verschil t.o.v. 250.000":tot-BASE_TOTAL
+  },budget,{
+    "Notitie begroting":g("note_budget"),
+    "Notitie scenario":g("note_model"),
+    "Notitie pledges":g("note_pledge"),
+    "Notitie sponsoren":g("note_sponsor"),
+    "Notitie fondsen":g("note_fondsen"),
+    "Notitie tickets & giving":g("note_ticket")
+  });
+}
+async function submitToSheet(){
+  const btn=document.getElementById("sendBtn"),st=document.getElementById("sendStatus");
+  save();
+  if(!SHEET_ENDPOINT||SHEET_ENDPOINT.indexOf("__")===0){
+    st.style.color="var(--fire)";st.textContent="Sheet-koppeling nog niet ingesteld.";return;
+  }
+  if(!document.getElementById("submitterName").value.trim()){
+    st.style.color="var(--fire)";st.textContent="Vul eerst je naam in.";return;
+  }
+  btn.disabled=true;st.style.color="var(--muted)";st.textContent="Versturen…";
+  try{
+    await fetch(SHEET_ENDPOINT,{method:"POST",mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(collectPayload())});
+    st.style.color="var(--green)";st.textContent="Verzonden ✓ Bedankt!";
+  }catch(e){
+    st.style.color="var(--fire)";st.textContent="Versturen mislukt — controleer je verbinding en probeer opnieuw.";
+  }finally{btn.disabled=false;}
+}
+
+/* ---------- Opslaan (localStorage) ---------- */
+const KEY="dunamis2k27_review";
+let saveTimer;
+function save(){
+  const data={notes:{},radios:{},budget:{},name:""};
+  document.querySelectorAll("textarea.note").forEach(t=>data.notes[t.id]=t.value);
+  const nm=document.getElementById("submitterName"); if(nm)data.name=nm.value;
+  const bv=document.querySelector('input[name="bverdict"]:checked'); if(bv)data.radios.bverdict=bv.value;
+  const mv=document.querySelector('input[name="mverdict"]:checked'); if(mv)data.radios.mverdict=mv.value;
+  document.querySelectorAll("#budgetBody input.money").forEach(i=>data.budget[i.dataset.idx]=i.value);
+  try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}
+  const tag=document.getElementById("savedTag");tag.classList.add("show");
+  clearTimeout(saveTimer);saveTimer=setTimeout(()=>tag.classList.remove("show"),1200);
+}
+function load(){
+  let data;try{data=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+  if(!data)return;
+  if(data.notes)Object.entries(data.notes).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.value=v;});
+  const nm=document.getElementById("submitterName"); if(nm&&data.name)nm.value=data.name;
+  if(data.radios){
+    if(data.radios.bverdict){const el=document.querySelector(`input[name="bverdict"][value="${data.radios.bverdict}"]`);if(el)el.checked=true;}
+    if(data.radios.mverdict){const el=document.querySelector(`input[name="mverdict"][value="${data.radios.mverdict}"]`);if(el)el.checked=true;}
+  }
+  if(data.budget)Object.entries(data.budget).forEach(([idx,v])=>{const el=document.querySelector(`#budgetBody input.money[data-idx="${idx}"]`);if(el)el.value=v;});
+}
+function resetAll(){
+  if(!confirm("Alle aantekeningen en aanpassingen wissen?"))return;
+  localStorage.removeItem(KEY);location.reload();
+}
+
+/* ---------- init ---------- */
+buildBudget();
+load();
+recalc();
+setModel('A');
+document.querySelectorAll("textarea.note").forEach(t=>t.addEventListener("input",save));
+document.querySelectorAll('input[type="radio"]').forEach(r=>r.addEventListener("change",save));
+document.getElementById("submitterName").addEventListener("input",save);
+</script>
+</body>
+</html>
